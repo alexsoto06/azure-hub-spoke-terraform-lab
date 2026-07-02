@@ -102,8 +102,8 @@ resource "azurerm_windows_virtual_machine" "vm" {
   source_image_reference {
     publisher = each.value.os_type == "win11" ? "MicrosoftWindowsDesktop" : "MicrosoftWindowsServer"
     offer     = each.value.os_type == "win11" ? "windows-11" : "WindowsServer"
-    sku       = each.value.os_type == "win11" ? "win11-22h2-pro" : "2019-datacenter"
-    version   = "latest"
+    sku       = each.value.os_type == "win11" ? "win11-24h2-pro" : "2019-datacenter"
+    version   = "26100.8655.260607"
   }
 
   enable_automatic_updates = true

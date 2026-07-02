@@ -1,6 +1,13 @@
 terraform {
   required_version = ">= 1.5.0"
 
+  backend "azurerm" {
+    resource_group_name  = "ADS_Test_RG"
+    storage_account_name = "tfstatealexsoto"
+    container_name       = "tfstate"
+    key                  = "az104-lab.tfstate"
+  }
+  
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
