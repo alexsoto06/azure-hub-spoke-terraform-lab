@@ -119,8 +119,6 @@ resource "azurerm_subnet" "mgmt_subnet" {
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.hub_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
-
-  network_security_group_id = azurerm_network_security_group.nsg_mgmt.id
 }
 
 resource "azurerm_virtual_network" "spoke_vnet" {
@@ -136,8 +134,21 @@ resource "azurerm_subnet" "app_subnet" {
   virtual_network_name = azurerm_virtual_network.spoke_vnet.name
   address_prefixes     = ["10.1.1.0/24"]
 
+}
+
+resource "azurerm_subnet_network_security_group_association" "mgmt" {
+  subnet_id                 = azurerm_subnet.mgmt_subnet.id
+  network_security_group_id = azurerm_network_security_group.nsg_mgmt.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "app" {
+  subnet_id                 = azurerm_subnet.app_subnet.id
   network_security_group_id = azurerm_network_security_group.nsg_app.id
-  route_table_id            = azurerm_route_table.rt_app.id
+}
+
+resource "azurerm_subnet_route_table_association" "app" {
+  subnet_id      = azurerm_subnet.app_subnet.id
+  route_table_id = azurerm_route_table.rt_app.id
 }
 
 resource "azurerm_virtual_network_peering" "hub_to_spoke" {
