@@ -36,5 +36,5 @@ variable "vm_size" {
 variable "storage_account_name" {
   description = "Globally unique storage account name"
   type        = string
-  default     = "staz104lab"
+  default     = "stalexsoto104"
 }

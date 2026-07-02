@@ -33,13 +33,13 @@ locals {
       name       = "vm-dc1"
       subnet_id  = var.mgmt_subnet_id
       private_ip = "10.0.1.10"
-      os_type    = "server2022"
+      os_type    = "server2019"
     },
     {
       name       = "vm-file1"
       subnet_id  = var.mgmt_subnet_id
       private_ip = "10.0.1.20"
-      os_type    = "server2022"
+      os_type    = "server2019"
     },
     {
       name       = "vm-client1"
@@ -97,13 +97,12 @@ resource "azurerm_windows_virtual_machine" "vm" {
     name                 = "osdisk-${each.key}"
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
-    disk_size_gb         = 64
   }
 
   source_image_reference {
     publisher = each.value.os_type == "win11" ? "MicrosoftWindowsDesktop" : "MicrosoftWindowsServer"
     offer     = each.value.os_type == "win11" ? "windows-11" : "WindowsServer"
-    sku       = each.value.os_type == "win11" ? "win11-23h2-pro" : "2022-datacenter-g2"
+    sku       = each.value.os_type == "win11" ? "win11-22h2-pro" : "2019-datacenter"
     version   = "latest"
   }
 
