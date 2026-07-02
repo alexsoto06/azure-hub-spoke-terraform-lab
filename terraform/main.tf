@@ -25,7 +25,7 @@ data "azurerm_resource_group" "rg" {
 # ---------------------- NETWORK MODULE -----------------------------
 
 module "network" {
-  source              = "./modules/network"
+  source              = "../modules/network"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.rg.name
   home_public_ip      = var.home_public_ip
@@ -34,7 +34,7 @@ module "network" {
 # ---------------------- COMPUTE MODULE -----------------------------
 
 module "compute" {
-  source              = "./modules/compute"
+  source              = "../modules/compute"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.rg.name
   admin_username      = var.admin_username
@@ -47,7 +47,7 @@ module "compute" {
 # ---------------------- STORAGE MODULE -----------------------------
 
 module "storage" {
-  source              = "./modules/storage"
+  source              = "../modules/storage"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.rg.name
   storage_account_name = var.storage_account_name
@@ -56,7 +56,7 @@ module "storage" {
 # ---------------------- IDENTITY MODULE ----------------------------
 
 module "identity" {
-  source               = "./modules/identity"
+  source               = "../modules/identity"
   storage_account_id   = module.storage.storage_account_id
   app01_principal_id   = module.compute.vm_app01_principal_id
 }
@@ -64,7 +64,7 @@ module "identity" {
 # ---------------------- RECOVERY MODULE ----------------------------
 
 module "recovery" {
-  source              = "./modules/recovery"
+  source              = "../modules/recovery"
   location            = var.location
   resource_group_name = data.azurerm_resource_group.rg.name
 }
