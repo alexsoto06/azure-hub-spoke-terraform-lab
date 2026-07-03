@@ -1,2 +1,4 @@
 resource_group_name  = "ADS_Test_RG"
+admin_username       = "alexsoto"
 admin_password       = "ChangeThisPassword123!"
+location             = "eastus"
