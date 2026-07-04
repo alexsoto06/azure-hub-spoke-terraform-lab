@@ -153,7 +153,7 @@ backend "azurerm" {
 
 ### Remote State Storage
 
-![Project Logo]((screenshots/remote-state-blob.png) "My Project Logo")
+![Project Logo](screenshots/remote-state-blob.png "My Project Logo")
 
 ---
 
@@ -184,7 +184,7 @@ directly from Azure Key Vault.
 
 ### Security Resources
 
-![Project Logo](screenshots/key-vault-managed-identity.png) "My Project Logo")
+![Project Logo](screenshots/key-vault-managed-identity.png "My Project Logo")
 
 ---
 
@@ -212,7 +212,7 @@ Virtual Machines
 
 ### Budget Monitoring
 
-![Project Logo](screenshots/budget-alerts.png) "My Project Logo")
+![Project Logo](screenshots/budget-alerts.png "My Project Logo")
 
 ---
 
