@@ -60,7 +60,9 @@ The spoke subnet is associated with a route table and network security group to 
 
 ### Network Topology
 
-(screenshots/network-topology.png)
+![Project Logo](screenshots/network-topology.png "My Project Logo")
+
+
 
 ---
 
