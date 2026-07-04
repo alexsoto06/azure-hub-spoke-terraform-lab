@@ -1,5 +1,9 @@
 name: Terraform CI/CD
 
+concurrency:
+  group: terraform
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ "main" ]
@@ -40,7 +44,7 @@ jobs:
       working-directory: ./terraform
 
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -lock=false
       working-directory: ./terraform
 
     - name: Terraform Apply
