@@ -60,7 +60,7 @@ The spoke subnet is associated with a route table and network security group to 
 
 ### Network Topology
 
-screenshots/network-topology.png
+(screenshots/network-topology.png)
 
 ---
 
@@ -103,7 +103,7 @@ screenshots/network-topology.png
 
 ### Resource Group Deployment
 
-screenshots/resource-group-overview.png
+(screenshots/resource-group-overview.png)
 
 ---
 
@@ -123,7 +123,7 @@ GitHub repository secrets are used for authentication.
 
 ### GitHub Actions Deployment
 
-screenshots/github-actions-success.png
+(screenshots/github-actions-success.png)
 
 ---
 
@@ -149,7 +149,7 @@ backend "azurerm" {
 
 ### Remote State Storage
 
-screenshots/remote-state-blob.png
+(screenshots/remote-state-blob.png)
 
 ---
 
@@ -180,7 +180,7 @@ directly from Azure Key Vault.
 
 ### Security Resources
 
-screenshots/key-vault-managed-identity.png
+(screenshots/key-vault-managed-identity.png)
 
 ---
 
@@ -208,7 +208,7 @@ Virtual Machines
 
 ### Budget Monitoring
 
-screenshots/budget-alerts.png
+(screenshots/budget-alerts.png)
 
 ---
 
