@@ -249,14 +249,6 @@ Sensitive configuration values are intentionally excluded from source control.
 
 ---
 
-## Current Limitations
-
-- Public IPs are attached to lab VMs for accessibility
-- Azure Bastion is not deployed to reduce cost
-- Just-In-Time VM Access has not yet been implemented
-- Full Key Vault integration for VM password deployment is planned
-
----
 
 ## Future Enhancements
 
