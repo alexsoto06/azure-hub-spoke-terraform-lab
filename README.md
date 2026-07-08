@@ -124,6 +124,21 @@ Pipeline workflow:
 
 GitHub repository secrets are used for authentication.
 
+
+### Reproducing the GitHub Actions Deployment
+
+To use the included GitHub Actions workflow, create the following repository secrets:
+
+```text
+AZURE_CREDENTIALS
+ARM_CLIENT_ID
+ARM_CLIENT_SECRET
+ARM_SUBSCRIPTION_ID
+ARM_TENANT_ID
+```
+
+These values should belong to an Azure Service Principal with permissions to deploy resources into the target subscription.
+
 ### GitHub Actions Deployment
 
 
@@ -229,19 +244,25 @@ Virtual Machines
 
 ---
 
-## Deployment Prerequisites
+## Deploying in Your Own Azure Tenant
 
-This project was originally built and tested in a personal Azure lab environment. Before deploying it in your own Azure tenant, a few configuration changes are required.
+This project was originally built and tested in a personal Azure lab environment. To deploy it successfully in another Azure tenant, complete the following steps.
 
-### Azure Requirements
+### Step 1 - Clone the Repository
 
-- An active Azure subscription
-- An existing Resource Group
-- Terraform 1.5+
-- Azure CLI
-- Appropriate permissions to create Azure resources
+```bash
+git clone <repository-url>
+cd <repository-folder>
+cd terraform
+```
 
-Example Resource Group:
+---
+
+### Step 2 - Create an Azure Resource Group
+
+This project assumes an existing Resource Group and does not create one automatically.
+
+Example:
 
 ```bash
 az group create \
@@ -249,9 +270,19 @@ az group create \
   --location eastus
 ```
 
-### Terraform State Backend
+Alternatively, update the value of:
 
-This project uses an Azure Storage Account backend for remote Terraform state.
+```hcl
+resource_group_name
+```
+
+inside `terraform.tfvars`.
+
+---
+
+### Step 3 - Create a Storage Account for Terraform State
+
+This repository references a Terraform backend from my personal lab environment:
 
 ```hcl
 backend "azurerm" {
@@ -262,11 +293,168 @@ backend "azurerm" {
 }
 ```
 
-Before deployment, update these values to reference a Storage Account and Container that exist in your own Azure environment.
+Before deploying in your own tenant, create a Storage Account and Container for Terraform state.
 
-### GitHub Actions Configuration
+Example:
 
-The CI/CD pipeline expects the following GitHub repository secrets:
+```bash
+az storage account create \
+  --name mytfstateacct \
+  --resource-group ADS_Test_RG \
+  --location eastus \
+  --sku Standard_LRS
+
+az storage container create \
+  --name tfstate \
+  --account-name mytfstateacct
+```
+
+Update the backend block to reference your own values:
+
+```hcl
+backend "azurerm" {
+  resource_group_name  = "ADS_Test_RG"
+  storage_account_name = "mytfstateacct"
+  container_name       = "tfstate"
+  key                  = "az104-lab.tfstate"
+}
+```
+
+Terraform will not initialize successfully until these backend values are updated to reference Azure resources that exist in your own environment.
+
+---
+
+### Step 4 - Create terraform.tfvars
+
+The real `terraform.tfvars` file is intentionally excluded from source control.
+
+Copy:
+
+```text
+terraform/terraform.tfvars.example
+```
+
+Create:
+
+```text
+terraform/terraform.tfvars
+```
+
+Example:
+
+```hcl
+resource_group_name  = "ADS_Test_RG"
+
+location             = "eastus"
+
+admin_username       = "azureadmin"
+
+admin_password       = "ReplaceWithPassword"
+
+home_public_ip       = "X.X.X.X/32"
+
+storage_account_name = "youruniquestorageaccount"
+```
+
+Update all values for your environment.
+
+---
+
+### Step 5 - Authenticate to Azure
+
+Login:
+
+```bash
+az login
+```
+
+Verify subscription:
+
+```bash
+az account show
+```
+
+If needed:
+
+```bash
+az account set --subscription "<subscription-id>"
+```
+
+---
+
+### Step 6 - Deploy Locally
+
+Ensure Terraform 1.5+ is installed and available in your system PATH.
+
+Initialize Terraform:
+
+```bash
+terraform init
+```
+
+Review the plan:
+
+```bash
+terraform plan
+```
+
+Deploy:
+
+```bash
+terraform apply
+```
+
+Verify the deployment:
+
+```bash
+terraform output
+```
+
+
+Expected resources include:
+
+- 4 Virtual Machines
+- 2 Virtual Networks
+- Storage Account
+- Recovery Services Vault
+- Managed Identity
+- Azure Key Vault
+
+---
+
+### Step 7 - Configure GitHub Actions (Optional)
+
+At a minimum, the Service Principal should have Contributor access to the target Resource Group.
+
+If role assignments are being deployed through Terraform, additional permissions such as User Access Administrator may also be required.
+
+To use the included CI/CD pipeline, create an Azure Service Principal.
+
+Example:
+
+```bash
+az ad sp create-for-rbac \
+  --name github-terraform-lab \
+  --role Contributor \
+  --scopes /subscriptions/<subscription-id>
+```
+
+The command will return JSON output similar to:
+
+```json
+{
+  "clientId": "...",
+  "clientSecret": "...",
+  "subscriptionId": "...",
+  "tenantId": "..."
+}
+```
+
+Use these values to populate the GitHub repository secrets.
+
+
+
+Create the following GitHub repository secrets:
 
 ```text
 AZURE_CREDENTIALS
@@ -278,35 +466,35 @@ ARM_TENANT_ID
 
 These values should correspond to an Azure Service Principal with permissions to deploy resources into the target subscription.
 
-### terraform.tfvars
-
-The real `terraform.tfvars` file is intentionally excluded from source control.
-
-Create a local `terraform.tfvars` file based on the included example file:
+After configuring the secrets, the included GitHub Actions workflow can automatically execute:
 
 ```text
-terraform/terraform.tfvars.example
+Terraform Init
+Terraform Plan
+Terraform Apply
 ```
 
-and supply values appropriate for your environment.
+---
 
-## Deployment
+### Cost Considerations
 
-```bash
-git clone <repository-url>
+This project creates:
 
-cd terraform
+- 4 Virtual Machines
+- Azure Storage Account
+- Recovery Services Vault
+- Public IP Addresses
+- Virtual Networks
 
-terraform init
+These resources will incur Azure charges.
 
-terraform plan
+To help control costs, the lab includes:
 
-terraform apply
-```
+- VM Auto Shutdown
+- Azure Budget Alerts
+- Cost Analysis Monitoring
 
-Terraform state is stored remotely in Azure Blob Storage.
-
-Sensitive configuration values are intentionally excluded from source control.
+This project is designed to use Azure Blob Storage for remote Terraform state. Before deploying in another Azure tenant, update the backend configuration to reference your own Storage Account and Container.
 
 ---
 
