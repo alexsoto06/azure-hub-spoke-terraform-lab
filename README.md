@@ -229,6 +229,67 @@ Virtual Machines
 
 ---
 
+## Deployment Prerequisites
+
+This project was originally built and tested in a personal Azure lab environment. Before deploying it in your own Azure tenant, a few configuration changes are required.
+
+### Azure Requirements
+
+- An active Azure subscription
+- An existing Resource Group
+- Terraform 1.5+
+- Azure CLI
+- Appropriate permissions to create Azure resources
+
+Example Resource Group:
+
+```bash
+az group create \
+  --name ADS_Test_RG \
+  --location eastus
+```
+
+### Terraform State Backend
+
+This project uses an Azure Storage Account backend for remote Terraform state.
+
+```hcl
+backend "azurerm" {
+  resource_group_name  = "ADS_Test_RG"
+  storage_account_name = "tfstatealexsoto"
+  container_name       = "tfstate"
+  key                  = "az104-lab.tfstate"
+}
+```
+
+Before deployment, update these values to reference a Storage Account and Container that exist in your own Azure environment.
+
+### GitHub Actions Configuration
+
+The CI/CD pipeline expects the following GitHub repository secrets:
+
+```text
+AZURE_CREDENTIALS
+ARM_CLIENT_ID
+ARM_CLIENT_SECRET
+ARM_SUBSCRIPTION_ID
+ARM_TENANT_ID
+```
+
+These values should correspond to an Azure Service Principal with permissions to deploy resources into the target subscription.
+
+### terraform.tfvars
+
+The real `terraform.tfvars` file is intentionally excluded from source control.
+
+Create a local `terraform.tfvars` file based on the included example file:
+
+```text
+terraform/terraform.tfvars.example
+```
+
+and supply values appropriate for your environment.
+
 ## Deployment
 
 ```bash
