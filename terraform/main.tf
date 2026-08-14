@@ -84,6 +84,7 @@ module "recovery" {
 module "monitoring" {
   source              = "../modules/monitoring"
   resource_group_name = data.azurerm_resource_group.rg.name
+  location = var.location
   vm_ids              = values(module.compute.vm_ids)
   alert_email         = "alex.soto@lockmannkrane.com"
 }

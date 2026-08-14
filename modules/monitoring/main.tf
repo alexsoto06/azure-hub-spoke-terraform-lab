@@ -14,6 +14,9 @@ resource "azurerm_monitor_metric_alert" "vm_cpu_alert" {
   name                = "alert-vm-cpu-gt-80"
   resource_group_name = var.resource_group_name
   scopes              = var.vm_ids
+  target_resource_type = "Microsoft.Compute/virtualMachines"
+  target_resource_location = var.location
+  
   description         = "Triggers when VM CPU Percentage exceeds 80%"
   severity            = 2
   frequency           = "PT1M"

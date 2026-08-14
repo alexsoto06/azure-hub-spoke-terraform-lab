@@ -12,3 +12,8 @@ variable "alert_email" {
   description = "Email address for CPU alerts"
   default     = "alex.soto@lockmannkrane.com"
 }
+
+variable "location" {
+  description = "Azure region containing the monitored VMs"
+  type        = string
+}
