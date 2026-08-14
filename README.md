@@ -498,59 +498,55 @@ This project is designed to use Azure Blob Storage for remote Terraform state. B
 
 ---
 
+## Monitoring & Business Continuity
 
-## Future Enhancements
+To improve operational visibility and resiliency, Azure Monitor and Azure Backup services were deployed and managed entirely through Terraform and GitHub Actions CI/CD.
 
-- Azure Defender for Cloud
-- Just-In-Time VM Access
-- Log Analytics Workspace
-- Azure Bastion
-- Backup Policies
-- Azure Policy Assignments
-- Bicep Version of the Environment
-- Private Endpoints
+### Monitoring
 
----
+- Created a centralized Azure Monitor metric alert (`alert-vm-cpu-gt-80`) to monitor CPU utilization across all lab virtual machines.
+- Configured alert thresholds to trigger when average CPU usage exceeds **80%** during a rolling **5-minute window**.
+- Implemented an Azure Monitor Action Group (`ag-cpu-alerts`) to deliver email notifications for alert events.
+- Monitored resources:
+  - vm-dc1
+  - vm-file1
+  - vm-client1
+  - vm-app01
+- Automated deployment and management of monitoring resources through Terraform.
 
-## Skills Demonstrated
+### Backup & Recovery
 
-- Terraform
-- Infrastructure as Code
-- Azure Networking
-- Hub-and-Spoke Architecture
-- Azure Virtual Machines
-- Azure Storage
-- Azure RBAC
-- Managed Identities
-- Azure Key Vault
-- GitHub Actions
-- CI/CD
-- Azure Cost Management
-- Network Security Groups
-- Cloud Automation
+- Deployed an Azure Recovery Services Vault (`rsv-az104`) using Infrastructure as Code.
+- Created a custom backup policy (`policy-daily-vm-backup`) with:
+  - Daily backup schedule
+  - 7-day retention period
+  - Instant recovery snapshot retention
+- Enabled Azure VM backup protection for:
+  - vm-dc1
+  - vm-file1
+  - vm-client1
+  - vm-app01
+- Configured backup resources entirely through Terraform to ensure repeatable and consistent deployments.
 
----
+### Business Continuity Benefits
 
-## Resume Summary
+- Automated recovery point creation for critical virtual machines.
+- Centralized monitoring and alerting for proactive issue detection.
+- Reduced manual administration through Infrastructure as Code.
+- Improved resiliency and disaster recovery readiness through scheduled backups.
+- Integrated monitoring and backup deployment into the GitHub Actions Terraform CI/CD pipeline.
 
-```text
-Designed and deployed a modular Azure hub-and-spoke environment using Terraform and GitHub Actions, including VNets, NSGs, route tables, Windows virtual machines, Azure Storage, Recovery Services Vault, Azure RBAC, Managed Identity, Azure Key Vault, remote Terraform state, CI/CD automation, and Azure cost governance controls.
-```
+### Validation
 
----
+The deployment was successfully provisioned through GitHub Actions and Terraform, resulting in:
 
-## Author
-
-Alex Soto
-
-IT Support | Software Development | Master's Degree in Software Development @ Dominican Univeristy, River Forest, IL
-
-Certifications:
-
-- SC-300 Identity and Access Administrator
-- MD-102 Endpoint Administrator
-
----
+✅ Azure Monitor Alert Rule  
+✅ Azure Monitor Action Group  
+✅ Recovery Services Vault  
+✅ Custom Backup Policy  
+✅ Protected Azure Virtual Machines  
+✅ Remote Terraform State Management  
+✅ Fully Automated CI/CD Deployment Pipeline
 
 ## License
 
